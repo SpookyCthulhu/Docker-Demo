@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<script>
+
+// sets the width and height to be equal to the browser window size.
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+// Way to create html elements in javascript.
+var grid = document.createElement("div");
+// specifies the style to be grid and then the size of columns and rows
+// to be 5% of the viewport width (vw) repeating.
+grid.style.display = "grid";
+grid.style.gridTemplateColumns = "repeat(auto-fill, 5vw)";
+grid.style.gridTemplateRows = "repeat(auto-fill, 5vw)";
+// determines size of grid and the spacing between panels.
+grid.style.gap = "1px";
+grid.style.width = width + "px";
+grid.style.height = height + "px";
+document.body.appendChild(grid);
+
+// determines the number of panels as 5% of the pixel value of width
+// multiplied by 5% the pixel value of height.
+// now that I think aout it I'm not sure why I did it that way
+// but it works lmao
+var panelCount = Math.ceil(width / 20) * Math.ceil(height / 20);
+ 
+// hex code for the colors of the rainbow.
+var colors = ["#33a8c7", "#52e3e1", "#a0e426", "#fdf148", "#ffab00", "#f77976", "#f050ae", "#d883ff", "#9336fd"];
+
+// Ripped from stack overflow, uses regex to parse the format rgb(x, x, x)
+// then converts the relevant bits to hex format.
+function hexc(colorval) {
+  var parts = colorval.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  delete(parts[0]);
+  for (var i = 1; i <= 3; ++i) {
+    parts[i] = parseInt(parts[i]).toString(16);
+    if (parts[i].length == 1) parts[i] = '0' + parts[i];
+  }
+  color = '#' + parts.join('');
+  return color;
+}
+
+// Responsible for cycling the background color of the panels
+function changeColor(panel) {
+  var currentColor = panel.style.backgroundColor;
+  // finds the correct index in the colors array using hexc to translate.
+  var currentIndex = colors.indexOf(hexc(currentColor));
+  // increments the color over the length of the color array.
+  var nextIndex = (currentIndex + 1) % colors.length;
+  // sets next color to new index.
+  var nextColor = colors[nextIndex];
+  // sets panel style to next color.
+  panel.style.backgroundColor = nextColor;
+}
+
+// Loop through the panelCount
+for (var i = 0; i < panelCount; i++) {
+  // Create a new div element
+  var panel = document.createElement("div");
+  // Assign the class name and background color
+  panel.className = "square";
+  panel.style.backgroundColor = colors[i % colors.length];
+  // Add a click event listener that changes the panel color on click.
+  panel.addEventListener("click", function() {
+    changeColor(this);
+  });
+  // Append the div to the grid element
+  grid.appendChild(panel);
+}
+
+// Executes 'function' at an interval of 10 times a second.
+// function gathers all div containers with className 'square'
+// then calls changeColor on them to cycle to the next color.
+setInterval(function() {
+  // retrieves all the visible divs.
+  var panels = document.getElementsByClassName("square");
+
+  for (var i = 0; i < panels.length; i++) {
+    changeColor(panels[i]);
+  }
+// sets the time interval to every 100 milliseconds.
+}, 100);
+
+</script>
+</body>
+</html>
