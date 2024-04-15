@@ -2,9 +2,9 @@
 
 The following application consists of many divs that alternate between the colors of the rainbow
 
-and fill the screen (semi) dynamically. If a div is clicked it will flip colors, allowing you engrain 
+and fill the screen (semi) dynamically. If a div is clicked it will flip colors, allowing you to
 
-designs in the page.
+create designs in the page.
 
 To run the code for this application in your browser you first need to login to docker using:
 
